@@ -17,7 +17,7 @@ public class HomeController {
 //		return "home";
 //	}
 	
-//	ModelAndView를 통해서 데이터와 어디로 갈지 정해준다?
+//	ModelAndView를 통해서 데이터와 함께 어디로 갈지 정해준다.
 	@GetMapping({"/",""})
 	public ModelAndView home() {
 		ModelAndView mav = new ModelAndView();
