@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	hello world??
+	<a href="/test1">테스트</a> <!-- href는 @GetMapping의 url과 맞춘다. -->
+	<h2 th:text="${age}">나이</h2>
+	<a th:href="@{/member}">회원목록</a>
+	<a th:href="@{/bye}">잘가세요 </a>
+</body>
+</html>
