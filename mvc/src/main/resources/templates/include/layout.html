@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- 타임리프를 쓰고 레이아웃용 파일이다. 라고 쓴 것 -->
+<!-- 이 페이지는 페이지로 쓰는 것이 아니라 단순하게 레이아웃용으로 가져다 쓸 것이다. -->
+<head>
+<meta charset="UTF-8">
+<title>게시판</title>
+</head>
+<body>
+	<th:block th:replace="~{include/header :: headerLayout}"> <!-- 같은 타임리프끼리 읽어 오는 것으로 코드가 조금 다르다. head.html의 별명을 불러온다. -->
+	
+	</th:block>
+	<th:block th:replace="~{include/nav :: navLayout}">
+	
+	</th:block>
+	<div layout:fragment="content"> <!-- 이런식으로도 쓸 수 있다. -->
+	
+	</div>
+</body>
+</html>
