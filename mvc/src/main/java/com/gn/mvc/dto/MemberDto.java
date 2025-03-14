@@ -1,5 +1,7 @@
 package com.gn.mvc.dto;
 
+import java.time.LocalDateTime;
+
 import com.gn.mvc.entity.Member;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +22,8 @@ public class MemberDto {
 	private String member_id;
 	private String member_pw;
 	private String member_name;
+	private LocalDateTime reg_date;
+	private LocalDateTime mod_date;
 	
 //	MemberDto -> Member(Entity)
 	public Member toEntity() {
@@ -37,6 +41,8 @@ public class MemberDto {
 				.member_pw(member.getMemberPw())
 				.member_name(member.getMemberName())
 				.member_no(member.getMemberNo())
+				.reg_date(member.getRegDate())
+				.mod_date(member.getModDate())
 				.build();
 	}
 	

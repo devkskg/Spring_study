@@ -3,15 +3,14 @@ package com.gn.mvc.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.mvc.dto.BoardDto;
-import com.gn.mvc.entity.Board;
 import com.gn.mvc.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 //이만큼을 Lombok이 대신 만들어줌!!! 아래 보자!!
 public class BoardController {
+//	로그 레벨 확인해보자!
+	private Logger logger = LoggerFactory.getLogger(BoardController.class);
+//	로그 레벨 확인해보자!
+	
+	
+	
+	
 //	1. 필드 주입 -> 순환 참조
 //	@Autowired
 //	BoardService service;
@@ -81,12 +87,15 @@ public class BoardController {
 
 		// Service가 가지고 있는 createBoard 호출
 		// bean 스캐닝 해서 가져와서 쓸거다.
-		BoardDto boardDto = service.createBoard(dto);
+		BoardDto result = service.createBoard(dto);
+		
+		logger.debug("1 : " + result.toString());
+		logger.info("2 : " + result.toString());
+		logger.warn("3 : " + result.toString());
+		logger.error("4 : " + result.toString());
 		
 		
-		
-		
-		if(boardDto != null) {
+		if(result != null) {
 			resultMap.put("res_code", "200");
 			resultMap.put("res_msg", "게시글 등록이 완료되었습니다.");
 		}

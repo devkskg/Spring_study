@@ -48,7 +48,7 @@ layout:decorate="~{/include/layout}">
 				if(vali_boolean == false){
 					alert(vali_text);
 				} else{
-					const createFormDataSendByPostMethod = new FormData(form);
+					const createFormDataSendByPostMethod = new FormData(form); // FormData 방식 익숙해지자!
 					fetch("/member", {
 						method : 'post',
 						body : createFormDataSendByPostMethod

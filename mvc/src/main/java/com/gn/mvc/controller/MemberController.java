@@ -25,7 +25,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/member")
-	@ResponseBody
+	@ResponseBody // 응답을 JSON형태로 받는다.
 	public Map<String, String> createMemberApi(
 			MemberDto dto
 			){
@@ -33,7 +33,7 @@ public class MemberController {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		resultMap.put("res_code", "500");
 		resultMap.put("res_msg", "회원가입 중 오류가 발생했습니다.");
-		MemberDto memberDto = service.createMember(dto);
+		MemberDto memberDto = service.createMember(dto); // 매개변수는 화면단에서 받은 정보 dto, 메소드 결과는 처리되어서 반환된 결과값 dto
 		if(memberDto != null) {
 			resultMap.put("res_code", "200");
 			resultMap.put("res_msg", "회원가입이 완료되었습니다.");
