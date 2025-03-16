@@ -1,19 +1,24 @@
 package com.gn.mvc.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.mvc.dto.BoardDto;
+import com.gn.mvc.dto.SearchDto;
+import com.gn.mvc.entity.Board;
 import com.gn.mvc.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
+
 
 @Controller
 
@@ -41,6 +46,7 @@ public class BoardController {
 	
 //	3. 생성자 주입 + final -> 순환 참조X, 불변성 보장O 이게 제일 좋다!
 	private final BoardService service;
+	
 //	이만큼을 Lombok이 대신 만들어줌!!! 위에 보자!!
 //	@Autowired
 //	public BoardController(BoardService service) {
@@ -102,4 +108,19 @@ public class BoardController {
 		return resultMap;
 		
 	}
+	
+//	게시판 들어갈 때 + 검색
+	@GetMapping("/board")
+	public String selectBoardAll(Model model, SearchDto searchDto) {
+		// 1. DB에서 목록 SELECT
+		List<Board> resultList = service.selectBoardAll(searchDto);
+		// 2. 목록 Model에 등록
+		model.addAttribute("boardList", resultList);
+		model.addAttribute("searchDto", searchDto);
+		// 3. list.html에 데이터 셋팅
+		return "board/list";
+	}
+	
+	
+	
 }
