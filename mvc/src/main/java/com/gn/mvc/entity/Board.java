@@ -52,7 +52,9 @@ public class Board {
 	@Column(insertable=false,name="mod_date")
 	private LocalDateTime modDate;
 	
+//	board_writer에 대한 컬럼을 설정 했으니 따로 더 설정할 필요 없다! 필요도 없고 해서 안됨!
 	@ManyToOne
 	@JoinColumn(name="board_writer")
 	private Member member;
+	
 }

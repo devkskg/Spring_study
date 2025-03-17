@@ -2,6 +2,8 @@ package com.gn.mvc.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,7 +14,11 @@ import com.gn.mvc.entity.Board;
 public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecificationExecutor<Board> {
 	
 //	3. Specification 사용 / 오버로딩 했다~ 이걸 서비스의 selectBoardAll 에서 썼다.
-	List<Board> findAll(Specification<Board> spec);
+//	List<Board> findAll(Specification<Board> spec, Sort sort);
+	
+//	Pageble을 사용하기 위해 sort 제거하고 매개변수를 Pageable로 한다.
+//	페이지의 반환값은 Page Entity로 한다.
+	Page<Board> findAll(Specification<Board> spec, Pageable pageable);
 	
 	// 1. 메소드 네이밍. findBy + 필드명 + 키워드 형태
 //	List<Board> findByBoardTitleContaining(String keyword);

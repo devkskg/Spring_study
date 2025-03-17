@@ -1,11 +1,11 @@
 package com.gn.mvc.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.mvc.dto.BoardDto;
+import com.gn.mvc.dto.PageDto;
 import com.gn.mvc.dto.SearchDto;
 import com.gn.mvc.entity.Board;
 import com.gn.mvc.service.BoardService;
@@ -111,12 +112,34 @@ public class BoardController {
 	
 //	게시판 들어갈 때 + 검색
 	@GetMapping("/board")
-	public String selectBoardAll(Model model, SearchDto searchDto) {
+//	public String selectBoardAll(Model model, SearchDto searchDto) {
+//		페이징 관련 파라미터 추가!	
+//		public String selectBoardAll(Model model, SearchDto searchDto, @RequestParam(name="nowPage", defaultValue="1") int nowPage) {
+//		PageDto사용하자!
+		public String selectBoardAll(Model model, SearchDto searchDto, PageDto pageDto) {
+		
+//		PageDto 추가!
+		if(pageDto.getNowPage() == 0) {
+			pageDto.setNowPage(1);
+		}
+		
 		// 1. DB에서 목록 SELECT
-		List<Board> resultList = service.selectBoardAll(searchDto);
+//		List<Board> resultList = service.selectBoardAll(searchDto);
+//		페이징 사용!
+//		Page<Board> resultList = service.selectBoardAll(searchDto);
+//		페이징 파라미터 추가!
+		Page<Board> resultList = service.selectBoardAll(searchDto, pageDto);
+//		와 아래 부분 코드 생각 해봐야함.
+		pageDto.setTotalPage(resultList.getTotalPages());
+//		PageDto 추가했을때 추가로 보내줘야함
+		model.addAttribute("pageDto", pageDto);
+		
+		
 		// 2. 목록 Model에 등록
 		model.addAttribute("boardList", resultList);
 		model.addAttribute("searchDto", searchDto);
+		
+		
 		// 3. list.html에 데이터 셋팅
 		return "board/list";
 	}

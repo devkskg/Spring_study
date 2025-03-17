@@ -4,6 +4,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 layout:decorate="~{/include/layout}">
 	<th:block layout:fragment="content">	
 		<link th:href="@{/css/board/list.css}" rel="stylesheet">
+		<link th:href="@{/css/include/paging.css}" rel="stylesheet">
 		<section>
 		<div id="section_wrap">
 			<div class="word">
@@ -11,6 +12,15 @@ layout:decorate="~{/include/layout}">
 				
 				<!-- 검색 -->
 				<form action="/board" name="search_board_form" method="get" >
+				
+				<!-- 정렬을 위한 코드 -->
+				<div class="sort">
+					<select id="order_type" name="order_type">
+						<option value="1" th:selected="${searchDto.order_type == 1}">최신순</option>
+						<option value="2" th:selected="${searchDto.order_type == 2}">오래된순</option>
+					</select>
+				</div>
+				
 					<div class="search">
 						<select name="search_type">
 							<option value="1" th:selected="${searchDto.search_type == 1}">제목</option>
@@ -61,6 +71,45 @@ layout:decorate="~{/include/layout}">
 			<br>
 			<a style="border:1px solid black;" th:href="@{/board/create}">게시글 등록</a>
 		</div>
-		</section>	
+		</section>
+			
+		<!-- 페이징 위치! -->
+		<div class="center">
+			<div class="pagination">
+				<!-- paging 만들기 전 임시 코드 -->
+				<!-- <a th:href="@{/board(nowPage=1)}">1</a>
+				<a th:href="@{/board(nowPage=2)}">2</a>
+				<a th:href="@{/board(nowPage=3)}">3</a> -->
+				<a th:if="${pageDto.prev}"
+					th:href="@{/board(nowPage=${pageDto.pageBarStart-1}, search_type=${searchDto.search_type}, search_text=${searchDto.search_text}, order_type=${searchDto.order_type})}"
+					>
+					&laquo;
+				</a>
+				<!-- 이 부분 복잡하니 잘 봐야함 -->
+				<a th:each="num : ${#numbers.sequence(pageDto.pageBarStart, pageDto.pageBarEnd)}"
+					th:text="${num}"
+					th:href="@{/board(nowPage=${num}, search_type=${searchDto.search_type}, search_text=${searchDto.search_text}, order_type=${searchDto.order_type})}"
+					class = "page-link"
+					th:classappend="${pageDto.nowPage == num} ? 'active' "
+					>
+					<!-- th:classappend 일정 조건이 됐을 때 클래스를 추가해주는 것 -->
+					번호
+				</a>
+				<a th:if="${pageDto.next}"
+					th:href="@{/board(nowPage=${pageDto.pageBarEnd+1},search_type=${searchDto.search_type},search_text=${searchDto.search_text}, order_type=${searchDto.order_type})}"
+					>
+					&raquo;
+				</a>
+			</div>
+		</div>
+		
+		
+		<script>
+			document.getElementById('order_type').addEventListener('change', function(e){
+				const orderType = e.target.value;
+				location.href = "/board?order_type="+orderType;
+			});
+		</script>
+		
 	</th:block>
 </html>

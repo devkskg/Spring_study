@@ -3,6 +3,7 @@ package com.gn.mvc.dto;
 import java.time.LocalDateTime;
 
 import com.gn.mvc.entity.Board;
+import com.gn.mvc.entity.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,8 @@ public class BoardDto {
 	private String board_content;
 	private LocalDateTime reg_date;
 	private LocalDateTime mod_date;
+//	화면 단에서 받을 수 있도록! create.html에서 hidden으로 설정한 value가 넘어온다.
+	private Long board_writer;
 	
 	// 1. BoardDto -> Board(Entity)
 	public Board toEntity() {
@@ -30,6 +33,8 @@ public class BoardDto {
 				.boardTitle(board_title)
 				.boardContent(board_content)
 				.boardNo(board_no)
+//				board_writer와 memberNo가 매칭 + Member
+				.member(Member.builder().memberNo(board_writer).build())
 				.build();
 	}
 	
