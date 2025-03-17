@@ -5,6 +5,8 @@ layout:decorate="~{/include/layout}">
 	<th:block layout:fragment="content">	
 		<link th:href="@{/css/board/list.css}" rel="stylesheet">
 		<link th:href="@{/css/include/paging.css}" rel="stylesheet">
+		<!-- js불러오는 이유 : 게시물 디테일 들어가기 기능 만들기 위함 -->
+		<script th:src="@{/js/jquery-3.7.1.js}"></script>
 		<section>
 		<div id="section_wrap">
 			<div class="word">
@@ -55,8 +57,12 @@ layout:decorate="~{/include/layout}">
 							<td colspan="4">게시글이 없습니다.</td>
 						</tr>
 						<tr th:if="${!#lists.isEmpty(boardList)}"
-						th:each="board : ${boardList}">
-							<td th:text="${board.boardNo}">번호</td>
+							th:each="board, boardStatus : ${boardList}"
+							th:attr="data-board-no=${board.boardNo}"
+							>
+							<!-- data 쓰기 위해 th:attr 쓴다. -->
+							<!-- <td th:text="${board.boardNo}">번호</td> -->
+							<td th:text="${(pageDto.nowPage-1) * (pageDto.numPerPage) + boardStatus.count}">번호</td>
 							<td th:text="${board.boardTitle}">제목</td>
 							<!-- board.member 여기까지는 ManyToOne에 선언한 필드명 즉 member 엔티티에 접근만 한 것이다 -->
 							<td th:text="${board.member.memberName}">작성자</td>
@@ -109,6 +115,13 @@ layout:decorate="~{/include/layout}">
 				const orderType = e.target.value;
 				location.href = "/board?order_type="+orderType;
 			});
+			$(function(){
+				/* tr인 애 중에 exist인 애 < 라고 설정해야 섬세한 방법! 이거 방법은 따로 찾아보자 */
+				$('.board_list tbody tr').on('click', function(){
+					const boardNo = $(this).data('board-no');
+					location.href="/board/"+boardNo;
+				});
+			})
 		</script>
 		
 	</th:block>

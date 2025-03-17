@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -144,6 +146,59 @@ public class BoardController {
 		return "board/list";
 	}
 	
+//	상세 페이지 이동하기!
+	@GetMapping("/board/{idBoardNo01}")
+	public String selectBoardOne(@PathVariable("idBoardNo01") Long idBoardNo01, Model model) {
+//		logger.info("게시글 단일 조회 : " + idBoardNo01);
+		Board result = service.selectBoardOne(idBoardNo01);
+		model.addAttribute("board", result);
+		return "board/detail";
+	}
 	
+//	수정화면 전환 코드
+	@GetMapping("/board/{id}/update")
+	public String updateBoardView(@PathVariable("id") Long id, Model model) {
+		Board board = service.selectBoardOne(id);
+		model.addAttribute("board", board);
+		return "board/update";
+	}
 	
+//	수정완료
+	@PostMapping("/board/{id}/update")
+	@ResponseBody
+	public Map<String, String> updateBoardApi(BoardDto param) {
+//		1. BoardDto 출력(전달 확인)ok
+//		2. BoardService -> BoardRepository 게시글 수정
+//		3. 수정 결과 Entity가 null이 아니면 성공 / 그 외에는 실패
+//		System.out.println("BoardDto check : "  + param);
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put("res_code", "500");
+		resultMap.put("res_msg", "수정 실패했습니다.");
+		
+//		Board는 Entity다! 세심하게 하려면 Dto로 해야한다.
+		Board result = service.updateBoard(param);
+//		System.out.println("result 확인 : "  + result);
+		if(result != null) {
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "수정 완료했습니다.");
+		}
+//		System.out.println("result : " + result);
+		return resultMap;
+	}
+	
+//	삭제
+	@DeleteMapping("/board/{id}")
+	@ResponseBody
+	public Map<String, String> deleteBoardApi(@PathVariable("id") Long id){
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put("res_code", "500");
+		resultMap.put("res_msg", "삭제 실패했습니다.");
+		
+		int result = service.deleteBoard(id);
+		if(result == 1) {
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "삭제 성공했습니다.");
+		}
+		return resultMap;
+	}
 }

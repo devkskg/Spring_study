@@ -1,7 +1,5 @@
 package com.gn.mvc.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -95,4 +93,39 @@ public class BoardService {
 		return list;
 		
 	}
+		public Board selectBoardOne(Long idBoardNo01) {
+//			Board 형태로 가지고 올건데 가져올 게 없다면 null로 반환해라. 라는 뜻이다.
+			return repository.findById(idBoardNo01).orElse(null);
+		}
+		
+		public Board updateBoard(BoardDto param) {
+			Board result = null;
+//			1. @Id를 쓴 필드를 기준으로 타겟 조회
+			Board target = repository.findById(param.getBoard_no()).orElse(null);
+//			2. 타겟이 존재하는 경우 업데이트
+			if(target != null) {
+				result = repository.save(param.toEntity());
+			}
+			return result;
+		}
+		
+		public int deleteBoard(Long id) {
+//			repository.deleteById(id);
+//			return repository.findById(id).orElse(null);
+			
+//			위는 내가 짠 코드인데 누군가가 이미 삭제했다면 오류 뜰 가능성이 높음
+//			아래처럼 해야 예외 상황 막고 효율적인 코드가 된다.
+			int result = 0;
+			try {
+				Board target = repository.findById(id).orElse(null);
+				if(target != null) {
+					repository.deleteById(id);
+				}
+				result = 1;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+		
 }
