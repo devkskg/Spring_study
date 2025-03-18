@@ -59,6 +59,7 @@ layout:decorate="~{/include/layout}">
 						<tr th:if="${!#lists.isEmpty(boardList)}"
 							th:each="board, boardStatus : ${boardList}"
 							th:attr="data-board-no=${board.boardNo}"
+							class="exist"
 							>
 							<!-- data 쓰기 위해 th:attr 쓴다. -->
 							<!-- <td th:text="${board.boardNo}">번호</td> -->
@@ -117,7 +118,8 @@ layout:decorate="~{/include/layout}">
 			});
 			$(function(){
 				/* tr인 애 중에 exist인 애 < 라고 설정해야 섬세한 방법! 이거 방법은 따로 찾아보자 */
-				$('.board_list tbody tr').on('click', function(){
+				/* class 속성으로 exist를 추가 했는데 이렇게 하면 괜찮을까? */
+				$('.board_list tbody tr.exist').on('click', function(){
 					const boardNo = $(this).data('board-no');
 					location.href="/board/"+boardNo;
 				});

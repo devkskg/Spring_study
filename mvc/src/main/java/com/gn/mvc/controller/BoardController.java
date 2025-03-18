@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gn.mvc.dto.BoardDto;
 import com.gn.mvc.dto.PageDto;
 import com.gn.mvc.dto.SearchDto;
 import com.gn.mvc.entity.Board;
+import com.gn.mvc.service.AttachService;
 import com.gn.mvc.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,9 @@ public class BoardController {
 	
 //	3. 생성자 주입 + final -> 순환 참조X, 불변성 보장O 이게 제일 좋다!
 	private final BoardService service;
+	
+//	파일 관련 서비스!
+	private final AttachService attachService;
 	
 //	이만큼을 Lombok이 대신 만들어줌!!! 위에 보자!!
 //	@Autowired
@@ -93,21 +98,33 @@ public class BoardController {
 //				.build();
 		
 				
-
+//		파일수업!
+//		파일수업!
+//		파일수업!
 		// Service가 가지고 있는 createBoard 호출
 		// bean 스캐닝 해서 가져와서 쓸거다.
-		BoardDto result = service.createBoard(dto);
+//		BoardDto result = service.createBoard(dto);
+//		logger.debug("1 : " + result.toString());
+//		logger.info("2 : " + result.toString());
+//		logger.warn("3 : " + result.toString());
+//		logger.error("4 : " + result.toString());
 		
-		logger.debug("1 : " + result.toString());
-		logger.info("2 : " + result.toString());
-		logger.warn("3 : " + result.toString());
-		logger.error("4 : " + result.toString());
-		
-		
-		if(result != null) {
-			resultMap.put("res_code", "200");
-			resultMap.put("res_msg", "게시글 등록이 완료되었습니다.");
+//		파일 잘 들어오는 지 확인.
+		for(MultipartFile mf : dto.getFiles()) {
+//			가지고 온 이름을 출력할 수 있다.
+//			logger.info(mf.getOriginalFilename());
+			attachService.uploadFile(mf);
 		}
+		
+		
+		
+//		if(result != null) {
+//			resultMap.put("res_code", "200");
+//			resultMap.put("res_msg", "게시글 등록이 완료되었습니다.");
+//		}
+//		파일수업!
+//		파일수업!
+//		파일수업!
 		return resultMap;
 		
 	}

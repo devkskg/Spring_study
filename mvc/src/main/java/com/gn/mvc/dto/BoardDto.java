@@ -1,6 +1,9 @@
 package com.gn.mvc.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gn.mvc.entity.Board;
 import com.gn.mvc.entity.Member;
@@ -26,6 +29,8 @@ public class BoardDto {
 	private LocalDateTime mod_date;
 //	화면 단에서 받을 수 있도록! create.html에서 hidden으로 설정한 value가 넘어온다.
 	private Long board_writer;
+//	스프링에서 쓰이는 	
+	private List<MultipartFile> files;
 	
 	// 1. BoardDto -> Board(Entity)
 	public Board toEntity() {
