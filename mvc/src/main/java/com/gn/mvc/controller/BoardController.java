@@ -135,13 +135,13 @@ public class BoardController {
 		
 		
 		
+//		파일수업!
+//		파일수업!
+//		파일수업!
 //		if(result != null) {
 //			resultMap.put("res_code", "200");
 //			resultMap.put("res_msg", "게시글 등록이 완료되었습니다.");
 //		}
-//		파일수업!
-//		파일수업!
-//		파일수업!
 		return resultMap;
 		
 	}
@@ -202,6 +202,14 @@ public class BoardController {
 	public String updateBoardView(@PathVariable("id") Long id, Model model) {
 		Board board = service.selectBoardOne(id);
 		model.addAttribute("board", board);
+//		파일 수업!!
+//		파일 수업!!
+//		파일 수업!!
+		List<Attach> attachList = attachService.selectAttachList(id);
+		model.addAttribute("attachList", attachList);
+//		파일 수업!!
+//		파일 수업!!
+//		파일 수업!!
 		return "board/update";
 	}
 	
@@ -217,13 +225,15 @@ public class BoardController {
 		resultMap.put("res_code", "500");
 		resultMap.put("res_msg", "수정 실패했습니다.");
 		
+		logger.info("삭제 파일 정보 : " + param.getDelete_files());
+		
 //		Board는 Entity다! 세심하게 하려면 Dto로 해야한다.
-		Board result = service.updateBoard(param);
+//		Board result = service.updateBoard(param);
 //		System.out.println("result 확인 : "  + result);
-		if(result != null) {
-			resultMap.put("res_code", "200");
-			resultMap.put("res_msg", "수정 완료했습니다.");
-		}
+//		if(result != null) {
+//			resultMap.put("res_code", "200");
+//			resultMap.put("res_msg", "수정 완료했습니다.");
+//		}
 //		System.out.println("result : " + result);
 		return resultMap;
 	}

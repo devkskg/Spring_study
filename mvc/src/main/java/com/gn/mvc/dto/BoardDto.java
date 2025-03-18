@@ -31,6 +31,7 @@ public class BoardDto {
 	private Long board_writer;
 //	스프링에서 쓰이는 	
 	private List<MultipartFile> files;
+	private List<Long> delete_files;
 	
 	// 1. BoardDto -> Board(Entity)
 	public Board toEntity() {
