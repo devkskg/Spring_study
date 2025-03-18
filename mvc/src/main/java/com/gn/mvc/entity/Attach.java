@@ -29,7 +29,6 @@ import lombok.ToString;
 public class Attach {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="attach_no")
 	private Long attachNo;
 	
 	@Column(name="ori_name")

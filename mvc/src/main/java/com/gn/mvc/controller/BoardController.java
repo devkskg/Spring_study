@@ -1,6 +1,8 @@
 package com.gn.mvc.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gn.mvc.dto.AttachDto;
 import com.gn.mvc.dto.BoardDto;
 import com.gn.mvc.dto.PageDto;
 import com.gn.mvc.dto.SearchDto;
+import com.gn.mvc.entity.Attach;
 import com.gn.mvc.entity.Board;
 import com.gn.mvc.service.AttachService;
 import com.gn.mvc.service.BoardService;
@@ -109,11 +113,24 @@ public class BoardController {
 //		logger.warn("3 : " + result.toString());
 //		logger.error("4 : " + result.toString());
 		
+		
+		List<AttachDto> attachDtoList = new ArrayList<AttachDto>();
 //		파일 잘 들어오는 지 확인.
 		for(MultipartFile mf : dto.getFiles()) {
 //			가지고 온 이름을 출력할 수 있다.
 //			logger.info(mf.getOriginalFilename());
-			attachService.uploadFile(mf);
+			AttachDto attachDto = attachService.uploadFile(mf);
+			if(attachDto != null) {
+				attachDtoList.add(attachDto);
+			}
+		}
+//		파일의 개수가 똑같다면~
+		if(dto.getFiles().size() == attachDtoList.size()) {
+			int result = service.createBoard(dto, attachDtoList);
+			if(result > 0) {
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "게시글 등록이 완료되었습니다.");
+			}
 		}
 		
 		
@@ -169,6 +186,14 @@ public class BoardController {
 //		logger.info("게시글 단일 조회 : " + idBoardNo01);
 		Board result = service.selectBoardOne(idBoardNo01);
 		model.addAttribute("board", result);
+//		파일수업!!
+//		파일수업!!
+//		파일수업!!
+		List<Attach> attachList = attachService.selectAttachList(idBoardNo01);
+		model.addAttribute("attachList", attachList);
+//		파일수업!!
+//		파일수업!!
+//		파일수업!!
 		return "board/detail";
 	}
 	

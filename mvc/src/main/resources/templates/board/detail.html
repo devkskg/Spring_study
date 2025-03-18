@@ -11,11 +11,23 @@ layout:decorate="~{/include/layout}">
 				</div>
 				<div class="board_detail">
 					<ul>
-						<li>
-							<img src="">
+					
+						<!-- 강사님은 li안쪽에 th:block 하나 만들어서 div와 유사하게 사용했음! -->
+						<li th:if="${!#lists.isEmpty(attachList)}">
+							<img th:src="|/uploads/board/${attachList[0].newName}|">
 							<br>
-							<span></span>
+							<span th:text="${attachList[0].oriName}">대표 이미지 명칭</span>
 						</li>
+						
+						<li th:if="${#lists.isEmpty(attachList)}">
+							<img src="/uploads/board/default.png">
+							<br>
+							<span>대표 이미지가 없습니다.</span>
+						</li>
+						
+						
+						
+						
 						<li>
 							<table>
 								<tr>
@@ -38,6 +50,16 @@ layout:decorate="~{/include/layout}">
 								<tr>
 									<td>수정일</td>
 									<td th:text="${#temporals.format(board.modDate, 'yyyy-MM-dd')}">수정일</td>
+								</tr>
+								<tr>
+									<td>파일목록</td>
+									<td>
+										<div th:if="${!#lists.isEmpty(attachList)}"
+											th:each="attach : ${attachList}">
+											<a th:onclick="|location.href='@{/download/{id}(id=${attach.attachNo})}'|" 
+											th:text="${attach.oriName}">파일명</a>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</li>
