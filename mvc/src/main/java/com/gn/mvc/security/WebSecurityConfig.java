@@ -1,5 +1,7 @@
 package com.gn.mvc.security;
 
+import javax.sql.DataSource;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +14,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration // 스프링이 읽는 환경 파일입니다~ 라는 뜻
 @EnableWebSecurity // 스프링 시큐리티 쓸거에요~ 라는 뜻
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+	
+//	Application properties의 정보에 접근해서 알아서 정보 찾는 소스..??
+	private final DataSource dataSource;
 
 	// 1-1. 요청중에 정적인 리소스가 있는 경우 -> Security 비활성화
 	@Bean // security가 언제든 읽힐 수 있는 상태로 만든다. @Bean 쓰면 자동으로 public 처리 된다.
@@ -39,10 +49,26 @@ public class WebSecurityConfig {
 		.formLogin(login -> login.loginPage("/login")
 								.successHandler(new MyLoginSuccessHandler())
 								.failureHandler(new MyLoginFailureHandler()))
-		.logout(logout -> logout.clearAuthentication(true)
+		.logout(logout -> logout.logoutUrl("/logout")
+							.clearAuthentication(true)
 							.logoutSuccessUrl("/login")
-							.invalidateHttpSession(true));
+							.invalidateHttpSession(true)
+							.deleteCookies("remember-me"))
+		.rememberMe(rememberMe -> rememberMe.rememberMeParameter("remember-me")
+							.tokenValiditySeconds(60*60*24*30)
+							.alwaysRemember(false)
+							 .tokenRepository(tokenRepository()));
+		// alwaysRemember는 항상! 기억한다~ 라는 뜻
+		// tokenRepository는 DB에도 쿠키에도 토큰 정보 일부 저장해서 DB 정보 기준으로 쿠키랑 비교해서~~
 		return http.build();
+	}
+	
+	// 데이터베이스 접근 Bean 등록(JDBC방식으로 접근할 수 있도록 Bean만 만들자.) 테이블 자체가 remember-me와 약속된 포맷이다.
+	@Bean
+	PersistentTokenRepository tokenRepository() {
+		JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+		jdbcTokenRepository.setDataSource(dataSource);
+		return jdbcTokenRepository;
 	}
 	
 	// 2. 비밀번호 암호화에 사용될 Bean 등록
