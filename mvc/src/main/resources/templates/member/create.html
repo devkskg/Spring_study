@@ -49,8 +49,12 @@ layout:decorate="~{/include/layout}">
 					alert(vali_text);
 				} else{
 					const createFormDataSendByPostMethod = new FormData(form); // FormData 방식 익숙해지자!
-					fetch("/member", {
+					fetch("/signup", {
 						method : 'post',
+						headers : {
+			              'header': document.querySelector('meta[name="_csrf_header"]').content,
+			              'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content
+						},
 						body : createFormDataSendByPostMethod
 					})
 					.then(response => response.json())

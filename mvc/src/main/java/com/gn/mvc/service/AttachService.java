@@ -25,6 +25,8 @@ public class AttachService {
 	private final BoardRepository boardRepository;
 	private final AttachRepository attachRepository;
 	
+	
+	
 	@Value("${ffupload.location}")
 	private String fileDir;
 	
@@ -95,6 +97,54 @@ public class AttachService {
 	public Attach selectAttachOne(Long attachNo) {
 		Attach attach = attachRepository.findById(attachNo).orElse(null);
 		return attach;
+	}
+	
+	
+	
+	// 파일 메타 데이터 삭제
+	public int deleteMetaData(Long attach_no) {
+		int result = 0;
+		try {
+			// 지금까지 삭제할때 엔티티를 조회하고 있으면 삭제하고~ 했다.
+			// 이유 1. 이미 삭제된 애를 또 삭제하는 것을 방지하기 위해서
+			Attach target = attachRepository.findById(attach_no).orElse(null);
+			if(target != null) {
+				// 여기다 원래 삭제하는 코드를 넣었는 데~ attachRepository.deleteById~~ 이런식으로!
+				// 이유 2. Entity를 기준으로 삭제하는 방법이 JPA가 원하는 방향이다!
+				attachRepository.delete(target);
+			}
+			
+			
+			
+			
+			result = 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	// 파일 자체 메모리에서 삭제
+	public int deleteFileData(Long attach_no) {
+		int result = 0;
+		try {
+			// 있으면 Attach Entity, 없으면 null
+			Attach attach = attachRepository.findById(attach_no).orElse(null);
+			if(attach != null) {
+				// 해당하는 경로의 파일의 객체 생성
+				File file = new File(attach.getAttachPath());
+				// 파일이 존재하면 삭제
+				if(file.exists()) {
+					file.delete();
+				}
+				
+			}
+			
+			result = 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 }

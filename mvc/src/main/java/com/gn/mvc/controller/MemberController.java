@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.mvc.dto.MemberDto;
+import com.gn.mvc.entity.Member;
+import com.gn.mvc.security.MemberDetails;
 import com.gn.mvc.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberService service;
 	
-	@GetMapping("/member/create")
+	@GetMapping("/signup")
 	public String createMemberView() {
 		System.out.println("페이지 이동");
-		return "/member/create";
+		return "member/create";
 	}
 
-	@PostMapping("/member")
+	@PostMapping("/signup")
 	@ResponseBody // 응답을 JSON형태로 받는다.
 	public Map<String, String> createMemberApi(
 			MemberDto dto
@@ -41,4 +43,10 @@ public class MemberController {
 		return resultMap;
 		
 	}
+	
+	@GetMapping("/login")
+	public String loginView() {
+		return "member/login";
+	}
+	
 }

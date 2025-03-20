@@ -125,7 +125,7 @@ public class BoardController {
 			}
 		}
 //		파일의 개수가 똑같다면~
-		if(dto.getFiles().size() == attachDtoList.size()) {
+		if(dto.getFiles().size() == attachDtoList.size() || dto.getFiles().size() > 0) {
 			int result = service.createBoard(dto, attachDtoList);
 			if(result > 0) {
 			resultMap.put("res_code", "200");
@@ -225,15 +225,63 @@ public class BoardController {
 		resultMap.put("res_code", "500");
 		resultMap.put("res_msg", "수정 실패했습니다.");
 		
-		logger.info("삭제 파일 정보 : " + param.getDelete_files());
+//		logger.info("삭제 파일 정보 : " + param.getDelete_files());
+		
+		
+//		파일만 데이터 가져오기!
+//		파일만 데이터 가져오기!
+//		파일만 데이터 가져오기!
+		List<AttachDto> attachDtoList = new ArrayList<AttachDto>();
+		AttachDto attachDtoNew = new AttachDto();
+//		파일 잘 들어오는 지 확인.
+//		if(param.getDelete_files() != null) {
+		if(attachDtoNew != null) {
+			for(MultipartFile mf : param.getFiles()) {
+//			가지고 온 이름을 출력할 수 있다.
+//			logger.info(mf.getOriginalFilename());
+				// 파일 정상여부 및 
+				AttachDto attachDto = attachService.uploadFile(mf);
+				if(attachDto != null) {
+					attachDtoList.add(attachDto);
+				}
+			}
+		}
+//		}
+//		파일의 개수가 똑같다면~
+		Board result = service.updateBoard(param, attachDtoList);
+		int resultInt = 0;
+//		if(param.getFiles().size() == attachDtoList.size()) {
+//			result = service.updateBoard(param, attachDtoList);
+//			if(result != null) {
+//			resultMap.put("res_code", "200");
+//			resultMap.put("res_msg", "게시글 수정이 완료되었습니다.");
+//			}
+//		}
+//		파일만 데이터 가져오기!
+//		파일만 데이터 가져오기!
+//		파일만 데이터 가져오기!
+		
+		if(param.getDelete_files() != null && param.getDelete_files().size() != 0 && !param.getDelete_files().isEmpty()) {
+			for(Long attach_no : param.getDelete_files()) {
+				// (1) 메모리(DB)에서 파일 자체 삭제
+				if(attachService.deleteFileData(attach_no) > 0) {
+					// (2) DB 에서 메타 데이터 삭제 
+					// 사용자 입장에서는 이게 먼저 와야한다. 사용자 눈에는 메타 데이터만 나오기 떄문!
+					resultInt = attachService.deleteMetaData(attach_no);
+				}
+			}
+		}
+		
+		
+		
 		
 //		Board는 Entity다! 세심하게 하려면 Dto로 해야한다.
-//		Board result = service.updateBoard(param);
+//		Board result = service.updateBoard(param); // 파일 삭제하는 로직 추가했음
 //		System.out.println("result 확인 : "  + result);
-//		if(result != null) {
-//			resultMap.put("res_code", "200");
-//			resultMap.put("res_msg", "수정 완료했습니다.");
-//		}
+		if(result != null && resultInt > 0) {
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "수정 완료했습니다.");
+		}
 //		System.out.println("result : " + result);
 		return resultMap;
 	}

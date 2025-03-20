@@ -6,6 +6,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta charset="UTF-8">
 <title>게시판</title>
+<meta id="_csrf" name="_csrf" th:attr="content=${_csrf.token}">
+<meta id="_csrf_header" name="_csrf_header" th:attr="content=${_csrf.headerName}">
 </head>
 <body>
 	<th:block th:replace="~{include/header :: headerLayout}"> <!-- 같은 타임리프끼리 읽어 오는 것으로 코드가 조금 다르다. head.html의 별명을 불러온다. -->

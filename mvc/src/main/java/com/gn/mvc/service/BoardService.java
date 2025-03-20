@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+// final 붙어있는 애들만 매개변수생성자 쓰는 방법 필요하기 떄문에 @RequiredArgsConstructor 를 쓴거다! 이거 안 쓸거면 getter등 써야함
 public class BoardService {
 //	롬복이 대신 해줌! @RequiredArgsConstructor
 //	@Autowired
@@ -31,6 +32,15 @@ public class BoardService {
 //	롬복이 대신 해줌! @RequiredArgsConstructor
 	private final BoardRepository repository;
 	private final AttachRepository attachRepository;
+	
+//	파일삭제!!
+//	파일삭제!!
+//	파일삭제!!
+	private final AttachService attachService;
+//	파일삭제!!
+//	파일삭제!!
+//	파일삭제!!
+	
 	
 	// 어노테이션 뿐만 아니라 JpaRepository를 상속받은 Interface들은 Bean 스캐닝 없이 사용 가능
 	
@@ -146,14 +156,113 @@ public class BoardService {
 			return repository.findById(idBoardNo01).orElse(null);
 		}
 		
+		@Transactional(rollbackFor = Exception.class)
+		public Board updateBoard(BoardDto param, List<AttachDto> attachDtoList) {
+			Board result = null;
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+			try {
+				// 1. @Id를 쓴 필드를 기준으로 타겟 조회
+				Board target = repository.findById(param.getBoard_no()).orElse(null);
+				// 2. 타겟이 존재하는 경우 업데이트
+				if (target != null) {
+					
+					// 자식(FK를 가지고 있는 테이블)을 수정하고 부모(PK를 가지고 있는 테이블)를 수정하는 순서가 맞다.
+					// 3. 파일이 존재하는 경우
+					// 조건문(삭제 하려는 파일이 있다면~)
+//					if(param.getDelete_files() != null && !param.getDelete_files().isEmpty()) {
+//						
+//						for(Long attach_no : param.getDelete_files()) {
+//							// (1) 메모리(DB)에서 파일 자체 삭제
+//							if(attachService.deleteFileData(attach_no) > 0) {
+//								// (2) DB 에서 메타 데이터 삭제 
+//								// 사용자 입장에서는 이게 먼저 와야한다. 사용자 눈에는 메타 데이터만 나오기 떄문!
+//								attachService.deleteMetaData(attach_no);
+//							}
+//						}
+//					}
+//					삭제 해볼까?
+//					삭제 해볼까?
+//					삭제 해볼까?
+					if(attachDtoList != null) {
+						// 4. Attach 엔티티 insert
+						for(AttachDto attachDto : attachDtoList) {
+							attachDto.setBoard_no(param.getBoard_no());
+							Attach attachEntity = attachDto.toEntity(attachDto);
+							Attach attachSaved = attachRepository.save(attachEntity);
+						}
+					}
+//					삭제 해볼까?
+//					삭제 해볼까?
+//					삭제 해볼까?
+					
+					
+					result = repository.save(param.toEntity());
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+			
+			
+			
+////			1. @Id를 쓴 필드를 기준으로 타겟 조회
+//			Board target = repository.findById(param.getBoard_no()).orElse(null);
+////			2. 타겟이 존재하는 경우 업데이트
+//			if(target != null) {
+//				result = repository.save(param.toEntity());
+//			}
+			return result;
+		}
+		@Transactional(rollbackFor = Exception.class)
 		public Board updateBoard(BoardDto param) {
 			Board result = null;
-//			1. @Id를 쓴 필드를 기준으로 타겟 조회
-			Board target = repository.findById(param.getBoard_no()).orElse(null);
-//			2. 타겟이 존재하는 경우 업데이트
-			if(target != null) {
-				result = repository.save(param.toEntity());
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+			try {
+				// 1. @Id를 쓴 필드를 기준으로 타겟 조회
+				Board target = repository.findById(param.getBoard_no()).orElse(null);
+				// 2. 타겟이 존재하는 경우 업데이트
+				if (target != null) {
+					
+					// 자식(FK를 가지고 있는 테이블)을 수정하고 부모(PK를 가지고 있는 테이블)를 수정하는 순서가 맞다.
+					// 3. 파일이 존재하는 경우
+					// 조건문(삭제 하려는 파일이 있다면~)
+					if(param.getDelete_files() != null && !param.getDelete_files().isEmpty()) {
+						
+						for(Long attach_no : param.getDelete_files()) {
+							// (1) 메모리(DB)에서 파일 자체 삭제
+							if(attachService.deleteFileData(attach_no) > 0) {
+								// (2) DB 에서 메타 데이터 삭제 
+								// 사용자 입장에서는 이게 먼저 와야한다. 사용자 눈에는 메타 데이터만 나오기 떄문!
+								attachService.deleteMetaData(attach_no);
+							}
+						}
+					}
+					
+					result = repository.save(param.toEntity());
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+//			파일 삭제 수업!!
+			
+			
+			
+////			1. @Id를 쓴 필드를 기준으로 타겟 조회
+//			Board target = repository.findById(param.getBoard_no()).orElse(null);
+////			2. 타겟이 존재하는 경우 업데이트
+//			if(target != null) {
+//				result = repository.save(param.toEntity());
+//			}
 			return result;
 		}
 		
