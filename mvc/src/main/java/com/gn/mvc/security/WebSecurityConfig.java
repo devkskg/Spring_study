@@ -33,9 +33,9 @@ public class WebSecurityConfig {
 		// http 방식으로 /login, /signup, /logout은 일단 허락. 나머지 부분으로 갈때는 인증 받은 분(authenticated)만 받아주세요. 로그인은 로그인 페이지로, 성공하면 /board로. 로그아웃할때는 인증정보 지워주고, 로그아웃 성공하면 로그인쪽으로, 로그아웃 성공하면 세션 정보를 싹 날려주세요.
 		http.userDetailsService(customUserDetailsService)
 		.authorizeHttpRequests(requests -> requests
-//				.requestMatchers("/login", "/signup", "/logout", "/", "/**").permitAll()
-//				.anyRequest().authenticated())
-				.anyRequest().permitAll()) // 모든 권한 준다~ 라는 뜻
+				.requestMatchers("/login", "/signup", "/logout", "/").permitAll()
+				.anyRequest().authenticated()) // ~외의 요청은 권한이 있는 사용자만 가능합니다~ 라는 뜻
+//				.anyRequest().permitAll()) // 모든 권한 준다~ 라는 뜻
 		.formLogin(login -> login.loginPage("/login")
 								.successHandler(new MyLoginSuccessHandler())
 								.failureHandler(new MyLoginFailureHandler()))

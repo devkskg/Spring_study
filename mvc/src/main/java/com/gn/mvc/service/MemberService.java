@@ -20,6 +20,7 @@ public class MemberService {
 //		String newPw = passwordEncoder.encode(oriPw);
 //		dto.setMember_pw(newPw);
 //		위의 3줄을 아래 1줄로 줄여 쓴 것.
+//		이거 코드 짧아서 놓치기 쉬움!
 		dto.setMember_pw(passwordEncoder.encode(dto.getMember_pw()));
 		Member param = dto.toEntity();
 		Member result = repository.save(param);
