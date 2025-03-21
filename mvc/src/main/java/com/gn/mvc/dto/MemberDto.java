@@ -24,6 +24,7 @@ public class MemberDto {
 	private String member_name;
 	private LocalDateTime reg_date;
 	private LocalDateTime mod_date;
+	private String member_role;
 	
 //	MemberDto -> Member(Entity)
 	public Member toEntity() {
@@ -32,6 +33,7 @@ public class MemberDto {
 				.memberPw(member_pw)
 				.memberName(member_name)
 				.memberNo(member_no)
+				.memberRole(member_role)
 				.build();
 	}
 //	 Member(Entity) -> MemberDto

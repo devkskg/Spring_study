@@ -44,6 +44,7 @@ public class WebSecurityConfig {
 		http.userDetailsService(customUserDetailsService)
 		.authorizeHttpRequests(requests -> requests
 				.requestMatchers("/login", "/signup", "/logout", "/").permitAll()
+				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.anyRequest().authenticated()) // ~외의 요청은 권한이 있는 사용자만 가능합니다~ 라는 뜻
 //				.anyRequest().permitAll()) // 모든 권한 준다~ 라는 뜻
 		.formLogin(login -> login.loginPage("/login")

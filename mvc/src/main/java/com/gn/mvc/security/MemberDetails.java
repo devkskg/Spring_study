@@ -29,7 +29,9 @@ public class MemberDetails implements UserDetails {
 	// Collection 여러개의 권한을 가질 수 있으니깐.
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority("user"));
+//		return List.of(new SimpleGrantedAuthority("user"));
+		// 권한 하드코딩 해놨던 걸 이제는 권한을 가입할 때 받은 정보->DB 로 한다!
+		return List.of(new SimpleGrantedAuthority(member.getMemberRole()));
 	}
 
 	// 사용자의 비밀번호 반환

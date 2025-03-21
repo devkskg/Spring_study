@@ -48,4 +48,8 @@ public class Member {
 	private LocalDateTime modDate;
 	@OneToMany(mappedBy = "member")
 	private List<Board> boards;
+	
+	// 역할 추가
+	@Column(nullable=false, name="member_role")
+	private String memberRole;
 }
