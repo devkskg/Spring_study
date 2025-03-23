@@ -37,6 +37,9 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 							<li>
 								<a th:onclick="|javascript:memberDelete('${#authentication.principal.member.memberNo}')|">회원 탈퇴</a>
 							</li>
+							<li>
+								<a th:href="@{/chat/list}">채팅 하기</a>
+							</li>
 						</th:block>
 					
 						<!-- <li>
