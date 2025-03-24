@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gn.mvc.entity.ChatMsg;
 import com.gn.mvc.entity.ChatRoom;
+import com.gn.mvc.service.ChatMsgService;
 import com.gn.mvc.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatController {
 	
 	private final ChatRoomService chatRoomService;
+	private final ChatMsgService chatMsgService;
 	
 	
 	@GetMapping("/list")
@@ -34,6 +37,16 @@ public class ChatController {
 	public String selectChatRoomOne(@PathVariable("id") Long id, Model model) {
 		ChatRoom chatRoom = chatRoomService.selectChatRoomOne(id);
 		model.addAttribute("chatRoom", chatRoom);
+		
+//		채팅방 기존 이력 추가!
+		//채팅메시지 서비스 만들고 오기~;
+		List<ChatMsg> msgList = chatMsgService.selectChatMsgAll(chatRoom.getRoomNo());
+		// 화면에 채팅 메시지 전달하기(key를 msgList로!)
+		model.addAttribute("msgList", msgList);
+//		System.out.println(msgList);
+		
+		
+		
 		return "chat/detail";
 	}
 	

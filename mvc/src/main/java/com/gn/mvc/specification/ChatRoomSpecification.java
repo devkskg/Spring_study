@@ -19,4 +19,6 @@ public class ChatRoomSpecification{
 			criteriaBuilder.equal(root.get("toMember"), member);
 	}
 	
+
+	
 }
