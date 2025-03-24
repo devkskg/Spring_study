@@ -10,6 +10,6 @@ import com.gn.mvc.entity.ChatRoom;
 
 public interface ChatMsgRepository extends JpaRepository<ChatMsg, Long>  {
 
-	List<ChatMsg> findAll(Specification<ChatRoom> spec);
+	List<ChatMsg> findAll(Specification<ChatMsg> spec);
 	
 }

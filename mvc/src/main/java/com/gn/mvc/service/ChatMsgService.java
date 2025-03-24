@@ -28,7 +28,7 @@ public class ChatMsgService {
 		// 조건 : 채팅방 번호
 		// (1) 전달받은 id를 기준으로 ChatRoom Entity 조회
 		ChatRoom chatRoom = chatRoomRepository.findById(id).orElse(null);
-		Specification<ChatRoom> spec = (root, query, criteriaBuilder) -> null;
+		Specification<ChatMsg> spec = (root, query, criteriaBuilder) -> null;
 		// (2) ChatRoom Entity 기준으로 Specification 생성
 		spec = spec.and(ChatMsgSpecification.chatRoomNoEquals(chatRoom));
 		// (3) spec을 매개변수로 전달하여 findAll 반환
