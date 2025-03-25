@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+<meta charset="UTF-8">
+<title>Spring 프레임워크 활용</title>
+</head>
+<script th:src="@{/js/jquery-3.7.1.js}"></script>
+<body>
+<th:block>
+	<h1>할 일 목록</h1>
+	<form action="" name="searchForm">
+		<label for="search_text">내용 : </label>
+		<input type="text" id="search_text" name="search_text">
+		<button type="button" id="searchBtn">검색</button>
+	</form>
+	<br>
+	<table class="todoTable" border="1" style="text-align: center;">
+		<thead>
+			<tr>
+				<th>완료</th>
+				<th>번호</th>
+				<th>내용</th>
+				<th>삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- thymeleaf를 사용한 방법이 사용되지 않음. 왜?-->
+			<!-- <tr th:if="${#lists.isEmpty(todoList)}"> -->
+			<tr th:if="${todoList.isEmpty}">
+				<td colspan="4" th:text="|조회된 데이터가 없습니다|">내용</td>
+			</tr>
+			
+			
+			<tr th:if="${!#lists.isEmpty(todoList)}"
+				th:each="todo, todoStatus : ${todoList}"
+				th:attr="data-todo-no=${todo.no}"
+				class="todoTr"
+				>
+				
+				<td><input class="todoCheckBox" type="checkbox" th:checked="${todo.flag == 'Y'}"
+				th:attr="data-todo-no=${todo.no}"></td>
+				<td th:text="${(pageDto.nowPage-1) * (pageDto.numPerPage) + todoStatus.count}">번호</td>
+				<td th:text="${todo.content}">내용</td>
+				<td><button type="button" class="todoDeleteBtn" th:attr="data-todo-no=${todo.no}">삭제</button></td>
+			</tr>
+			
+		</tbody>
+	</table>
+	<!-- 페이징하자 -->
+	<div>
+		<div>
+			<a th:if="${pageDto.prev}"
+				th:href="@{/(nowPage=${pageDto.pageBarStart-1}, search_text=${searchDto.search_text})}"
+				>
+				&laquo;
+			</a>
+			<a th:each="num : ${#numbers.sequence(pageDto.pageBarStart, pageDto.pageBarEnd)}"
+				th:text="${num}"
+				th:href="@{/(nowPage=${num}, search_text=${searchDto.search_text})}"
+				>
+				번호
+			</a>
+				<a th:if="${pageDto.next}"
+					th:href="@{/(nowPage=${pageDto.pageBarEnd+1}, search_text=${searchDto.search_text})}"
+					>
+					&raquo;
+				</a>
+		</div>
+	</div>
+	
+	<h1>할 일 추가</h1>
+	<form name="addForm">
+		<input type="text" id="content" name="content" placeholder="할일을 입력하세요.">
+		<button id="addBtn">추가하기</button>
+	</form>
+	
+	
+	<script>
+		// 할일 추가
+		const addForm = document.addForm;
+		addForm.addEventListener('submit', function(e){
+			e.preventDefault();
+			let vali_check = false;
+			let vali_text = '';
+			if(addForm.content.value == ''){
+				vali_text += '할일을 입력해주세요.';
+				addForm.content.focus();
+			} else{
+				vali_check = true;
+			}
+			if(vali_check == false){
+				alert(vali_text);
+			} else{
+				const addPayload = new FormData(addForm);
+				fetch("/todo01",{
+					method : "POST",
+					body : addPayload
+				})
+				.then(response => response.json())
+				.then(data => {
+					alert(data.res_msg);
+					if(data.res_code == 200){
+						location.href = '/';
+					}
+				});
+			}
+		})
+		
+		// 할일 체크 업데이트
+		$('.todoCheckBox').on('change', function(){
+			const todoNo = $(this).data('todo-no');
+			let checkFlag = 'N';
+			if($(this).prop('checked')){
+				checkFlag = 'Y';
+			} else{
+				checkFlag = 'N';
+			}
+			
+			// console.log(checkFlag);
+			
+			fetch("/todo/"+todoNo+"/update/"+checkFlag,{
+				method : "POST",
+				body : checkFlag
+			})
+			.then(response => response.json())
+			.then(data => {
+				if(data.res_code == 500){
+					alert(data.res_msg);
+				}
+			});
+		})
+		
+		// 할일 삭제
+		$('.todoDeleteBtn').on('click', function(){
+			const deleteConfirm = 'false';
+			const deleteTodoNo = $(this).data('todo-no');
+			if(confirm('삭제하시겠습니까?')){
+				//alert('진짜');
+				
+				fetch("/todo/"+deleteTodoNo,{
+					method : "delete"
+				})
+				.then(response => response.json())
+				.then(data => {
+					alert(data.res_msg)
+					if(data.res_code == 200){
+						location.href = "/";
+					}
+				})
+						
+			} else{
+				//alert('취소');
+			}
+			
+		})
+		
+		
+	</script>
+</th:block>
+</body>
+</html>
