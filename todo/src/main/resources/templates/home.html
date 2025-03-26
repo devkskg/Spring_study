@@ -11,8 +11,9 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 	<h1>할 일 목록</h1>
 	<form action="" name="searchForm">
 		<label for="search_text">내용 : </label>
-		<input type="text" id="search_text" name="search_text">
-		<button type="button" id="searchBtn">검색</button>
+		<input type="text" id="search_text" name="search_text"
+			th:value="${searchDto.search_text}">
+		<button type="submit" id="searchBtn">검색</button>
 	</form>
 	<br>
 	<table class="todoTable" border="1" style="text-align: center;">
@@ -26,8 +27,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 		</thead>
 		<tbody>
 			<!-- thymeleaf를 사용한 방법이 사용되지 않음. 왜?-->
-			<!-- <tr th:if="${#lists.isEmpty(todoList)}"> -->
-			<tr th:if="${todoList.isEmpty}">
+			<tr th:if="${#lists.isEmpty(todoList)}">
+			<!-- <tr th:if="${todoList.isEmpty}"> -->
 				<td colspan="4" th:text="|조회된 데이터가 없습니다|">내용</td>
 			</tr>
 			
@@ -121,7 +122,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 			
 			fetch("/todo/"+todoNo+"/update/"+checkFlag,{
 				method : "POST",
-				body : checkFlag
+			  	headers: {
+			    	"Content-Type": "application/json"
+			  	},
+				body : JSON.stringify({no:todoNo,flag:checkFlag})
 			})
 			.then(response => response.json())
 			.then(data => {

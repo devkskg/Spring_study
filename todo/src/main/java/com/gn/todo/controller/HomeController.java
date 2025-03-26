@@ -30,8 +30,17 @@ public class HomeController {
 			searchDto.setSearch_text("");
 		}
 		Page<Todo> resultList = service.selectTodoAll(searchDto, pageDto);
+		
 		pageDto.setTotalPage(resultList.getTotalPages());
-		model.addAttribute("todoList", resultList);
+		// 방법 1 - null로 보내는 경우 html에서도 null 판단이 필요해서 코드가 복잡해진다.
+//		if(resultList.isEmpty()) {
+//			resultList = null;
+//		}
+		
+		// 방법2 - Paging 정보를 제외한 list 정보만 넘기고 싶을 경우 쓴다
+		model.addAttribute("todoList", resultList.getContent());
+		
+//		model.addAttribute("todoList", resultList);
 		// 초기 화면 진입시 total page가 0으로 잡혀서 오류 발생 -> total page 세팅해서 오류 해결
 		if(resultList.isEmpty()) {
 			pageDto.setTotalPage(1);

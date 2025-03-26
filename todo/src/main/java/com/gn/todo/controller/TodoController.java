@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.todo.Dto.TodoDto;
@@ -45,12 +46,14 @@ public class TodoController {
 //	할일 체크, 체크해제
 	@PostMapping("/todo/{id}/update/{checkFlag}")
 	@ResponseBody
-	public Map<String, String> updateTodoApi(@PathVariable("id") Long id, @PathVariable("checkFlag") String checkFlag){
+	public Map<String, String> updateTodoApi(@PathVariable("id") Long id, @PathVariable("checkFlag") String checkFlag, @RequestBody(required = false) Map<String, Object> body){
+//	public Map<String, String> updateTodoApi(@PathVariable("id") Long id, @PathVariable("checkFlag") String checkFlag){
 		Map<String, String> resultMap = new HashMap<String, String>();
 		resultMap.put("res_code", "500");
 		resultMap.put("res_msg", "업데이트에 실패했습니다.");
 		
 		Todo result = service.updateTodo(id, checkFlag);
+		System.out.println("제이슨으로 넘어온 데이터 : " + body);
 		
 		if(result != null) {
 			resultMap.put("res_code", "200");

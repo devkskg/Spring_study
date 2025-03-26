@@ -48,13 +48,22 @@ public class TodoService {
 //	할일 체크
 	public Todo updateTodo(Long id,String checkFlag) {
 		Todo result = null;
+		TodoDto dto = null;
 		try {
 			Todo todo = repository.findById(id).orElse(null);
 			if(todo == null) {
 				return null;
 			}
 			todo.setFlag(checkFlag);
-			result = repository.save(todo);
+			
+			dto = TodoDto.builder()
+							.no(todo.getNo())
+							.content(todo.getContent())
+							.flag(checkFlag)
+							.build();
+			
+			
+			result = repository.save(dto.toEntity());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,6 +84,7 @@ public class TodoService {
 		}
 		return result;
 	}
+	
 	
 	
 	
