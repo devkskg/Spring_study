@@ -4,10 +4,148 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 <head>
 <meta charset="UTF-8">
 <title>Spring 프레임워크 활용</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 30px;
+    background-color: #f9f9f9;
+  }
+
+  h1 {
+    color: #5e4b8b;
+    border-left: 5px solid #bfa2db;
+    padding-left: 10px;
+    margin-top: 40px;
+  }
+
+  form[name="searchForm"], form[name="addForm"] {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #d0bce0;
+    border-radius: 4px;
+    width: 300px;
+    background-color: #f4effa;
+  }
+
+  button {
+    padding: 6px 12px;
+    background-color: #bfa2db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #a68ac5;
+  }
+
+  table.todoTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+
+  table.todoTable th,
+  table.todoTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+  }
+
+  table.todoTable th {
+    background-color: #ede2f5;
+    color: #5e4b8b;
+  }
+
+  table.todoTable tr:nth-child(even) {
+    background-color: #f9f4fc;
+  }
+
+  table.todoTable input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+
+  .todoDeleteBtn {
+    background-color: #f8b3b3;
+  }
+
+  .todoDeleteBtn:hover {
+    background-color: #f49c9c;
+  }
+
+  /* 페이징 */
+  .pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .pagination-wrapper a {
+    margin: 0 4px;
+    padding: 6px 10px;
+    text-decoration: none;
+    border: 1px solid #c8b3dd;
+    color: #5e4b8b;
+    border-radius: 3px;
+    background-color: #f4effa;
+  }
+
+  .pagination-wrapper a:hover {
+    background-color: #e3d5f2;
+  }
+
+  a[th\:href]:not([href]) {
+    color: #b4a3c7;
+    pointer-events: none;
+    cursor: default;
+  }
+</style>
+
+
 </head>
 <script th:src="@{/js/jquery-3.7.1.js}"></script>
 <body>
 <th:block>
+	<h1>파일 목록</h1>
+	<form name="create_file_form">
+		<input type="file" name="files" multiple>
+		<input type="submit" value="업로드">
+	</form>
+	<script>
+		// 파일 추가
+		const createFileForm = document.create_file_form;
+		createFileForm.addEventListener('submit', function(e){
+			e.preventDefault();
+			if(!createFileForm.files.value){
+				alert('파일을 넣어주세요.');
+			} else{
+				const createFilePayload = new FormData(createFileForm);
+				fetch("/attach/create",{
+					method : "POST",
+					body : createFilePayload
+				})
+				.then(response => response.json())
+				.then(data => {
+					alert(data.res_msg);
+					if(data.res_code == 200){
+						location.href = '/';
+					}
+				});
+				
+			}
+			
+		})
+			
+		
+	</script>
 	<h1>할 일 목록</h1>
 	<form action="" name="searchForm">
 		<label for="search_text">내용 : </label>
@@ -49,6 +187,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 		</tbody>
 	</table>
 	<!-- 페이징하자 -->
+	<br>
 	<div>
 		<div>
 			<a th:if="${pageDto.prev}"
