@@ -115,10 +115,32 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 <body>
 <th:block>
 	<h1>파일 목록</h1>
+	<!-- 업로드 -->
 	<form name="create_file_form">
 		<input type="file" name="files" multiple>
 		<input type="submit" value="업로드">
 	</form>
+	<br>
+	<!-- 다운로드 -->
+	<table class="todoTable" border="1" th:if="${!#lists.isEmpty(attachList)}" style="text-align: center;">
+		<thead>
+			<th>번호</th>
+			<th>다운로드</th>
+		</thead>
+		<tbody>
+			<tr th:each="attach, attachStatus : ${attachList}">
+				<td th:text="${attachStatus.count}">번호(Status의 count사용)</td>
+				<td>
+					<!-- 자바스크립트 기준으로 쓸때도 || 쓴다. -->
+					<a th:onclick='|location.href="@{/download/{id}(id=${attach.attachNo})}"|' th:text="${attach.oriName}">
+						파일의 명칭
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	
 	<script>
 		// 파일 추가
 		const createFileForm = document.create_file_form;

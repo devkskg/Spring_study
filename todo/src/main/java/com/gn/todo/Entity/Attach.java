@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@Table
+@Table(name="attach")
 @Entity
 public class Attach {
 	@Id

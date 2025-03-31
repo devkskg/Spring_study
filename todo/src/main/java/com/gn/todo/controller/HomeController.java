@@ -1,5 +1,7 @@
 package com.gn.todo.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.gn.todo.Dto.PageDto;
 import com.gn.todo.Dto.SearchDto;
+import com.gn.todo.Entity.Attach;
 import com.gn.todo.Entity.Todo;
+import com.gn.todo.service.AttachService;
 import com.gn.todo.service.TodoService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HomeController {
 	private final TodoService service;
+	private final AttachService attachService;
 	
 
 //	메인화면 진입시 조회 검색 페이징
@@ -52,6 +57,10 @@ public class HomeController {
 //		
 //		System.out.println(pageDto);
 //		System.out.println(searchDto);
+		
+		// 파일 목록
+		List<Attach> attachList = attachService.selectAttachList();
+		model.addAttribute("attachList", attachList);
 		
 		
 		
