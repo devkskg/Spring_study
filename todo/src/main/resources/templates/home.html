@@ -150,7 +150,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 				alert('파일을 넣어주세요.');
 			} else{
 				const createFilePayload = new FormData(createFileForm);
-				fetch("/attach/create",{
+				fetch("/s3/upload",{
 					method : "POST",
 					body : createFilePayload
 				})

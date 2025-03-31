@@ -46,8 +46,8 @@ public class AttachController {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		resultMap.put("res_code", "500");
 		resultMap.put("res_msg", "파일이 등록에 실패했습니다.");
-		System.out.println(files.isEmpty());
-		System.out.println(files.size());
+//		System.out.println(files.isEmpty());
+//		System.out.println(files.size());
 		try {
 			for(MultipartFile mf : files) {
 				// System.out.println(mf.getOriginalFilename());
