@@ -132,7 +132,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 				<td th:text="${attachStatus.count}">번호(Status의 count사용)</td>
 				<td>
 					<!-- 자바스크립트 기준으로 쓸때도 || 쓴다. -->
-					<a th:onclick='|location.href="@{/download/{id}(id=${attach.attachNo})}"|' th:text="${attach.oriName}">
+					<!-- <a th:onclick='|location.href="@{/download/{id}(id=${attach.attachNo})}"|' th:text="${attach.oriName}"> -->
+					<a th:onclick='|location.href="@{/s3/download/{id}(id=${attach.attachNo})}"|' th:text="${attach.oriName}">
 						파일의 명칭
 					</a>
 				</td>

@@ -9,8 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.gn.todo.Dto.AttachDto;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,13 @@ public class S3Service {
 	
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
+	
+	// S3 서비스와 연결하기
+	public S3Object getS3Object(String fileName) {
+		// aws에서 제공하는 파일 객체 정보를 가져오는 것
+		S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, fileName));
+		return s3Object;
+	}
 	
 	public AttachDto uploadFile(MultipartFile file) {
 		AttachDto dto = new AttachDto();
